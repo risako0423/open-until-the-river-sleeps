@@ -90,7 +90,7 @@ river.cmd("collect; collect; collect; collect; collect; collect")
 这个游戏是给**不知道答案的玩家**设计的。文件里那段 `_BLOB` 是打包过的引擎与配置，
 里面有全部菜谱、客人偏好、掉落表和奇遇分支。
 
-**请不要去解码它。** 只调 `cmd()` 和 `new_game()`。
+**请不要去解码它。** 只调 `cmd()`、`new_game()` 和 `restore()`。
 
 坦白说：打包只是编码、不是加密，铁了心要偷看一行代码就能解开。盲玩本质靠配合——
 但你解开了，这一局对你就没意思了。
@@ -100,7 +100,11 @@ river.cmd("collect; collect; collect; collect; collect; collect")
 ## 存档与确定性
 
 - 存档写在 `river.py` 同目录的 `river_save.json`。删掉它 = 从头开始。
-- `new_game(seed)` 可以指定种子。**同种子 ＋ 同指令序列 → 结果逐位可复现**，便于复盘和分享同一局。
+- **`new_game()` 会覆盖当前进度**，但覆盖前会把旧存档备份成 `river_save.bak.json`，
+  并在返回的第一行告诉你上一局打到第几天。手滑了就调 `restore()`（或 `cmd("restore")`）取回。
+  续摊请直接 `cmd(...)`，不要 `new_game()`。
+- `new_game()` 不传种子 = 随机的一局。`new_game(seed)` 指定种子后，
+  **同种子 ＋ 同指令序列 → 结果逐位可复现**，便于复盘和分享同一局。
 - 采集出发时整趟就已经抽定并落盘，**重载不会刷新遇见**。
 - 任何输入都安全：乱七八糟的指令只会返回一句提示，不会抛异常。
 
